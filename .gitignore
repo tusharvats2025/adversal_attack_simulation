@@ -1,0 +1,21 @@
+# Python ignores
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+
+# VSCode/PyCharm
+.vscode/
+.idea/
+
+# Environment folders
+env/
+venv/
+.venv/
+
+# OS
+.DS_Store
+Thumbs.db

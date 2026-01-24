@@ -2,12 +2,15 @@ from models.SimpleCnn import SimpleCNN
 from models.resnet18 import ResNet18
 from models.resnet34 import ResNet34
 from models.wideresnet import WideResNet
+from models.vit import VisionTransformer
+
 
 MODEL_REGISTRY = {
     "simple_cnn": SimpleCNN,
     "resnet18": ResNet18,
     "resnet34": ResNet34,
     "wideresnet": WideResNet,
+    "vit": VisionTransformer
 }
 
 def get_model(model_name, **kwargs):

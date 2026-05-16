@@ -1,14 +1,25 @@
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 
-def get_cifar10(batch_size=128):
-    transform_train = transforms.Compose([
-        transforms.RandomCrop(32, padding=4),
-        transforms.RandomHorizontalFlip(),
-        transforms.ToTensor(),
-    ])
+def get_cifar10(batch_size=128, image_size=32):
 
-    transform_test = transforms.ToTensor()
+    if image_size != 32:
+        transform_train = transforms.Compose([
+            transforms.Resize(image_size),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            ])
+        transform_test = transforms.Compose([
+            transforms.Resize(image_size),
+            transforms.ToTensor()
+              ])
+    else:
+        transform_train = transforms.Compose([
+            transforms.RandomCrop(32, padding=4),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+        ])
+        transform_test = transforms.ToTensor()
 
     train = datasets.CIFAR10(
         "./data", train=True, download=True, transform=transform_train

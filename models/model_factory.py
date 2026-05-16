@@ -14,6 +14,7 @@ MODEL_REGISTRY = {
 }
 
 def get_model(model_name, **kwargs):
-    if model_name in MODEL_REGISTRY:
+    if model_name not in MODEL_REGISTRY:
         raise ValueError(f"Unkown model: {model_name}")
-    return MODEL_REGISTRY(model_name)(**kwargs)
+    
+    return MODEL_REGISTRY[model_name](**kwargs)

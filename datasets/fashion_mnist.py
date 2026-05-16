@@ -1,8 +1,11 @@
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 
-def get_fashion_mnist(batch_size=64):
-    transform = transforms.ToTensor()
+def get_fashion_mnist(batch_size=64, image_size=28):
+    transform = transforms.Compose([
+        transforms.Resize(image_size),
+        transforms.ToTensor()
+    ])
 
     train = datasets.FashionMNIST(
         "./data", train=True, download=True, transform=transform

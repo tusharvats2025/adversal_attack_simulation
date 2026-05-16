@@ -2,7 +2,7 @@ import torch.nn as nn
 import torch
 
 class SimpleCNN(nn.Module):
-    def __init__(self):
+    def __init__(self, num_classes=10, in_channels = 1, image_size=28, **kwargs):
         super(SimpleCNN, self).__init__()
 
         self.features = nn.Sequential(
@@ -15,16 +15,16 @@ class SimpleCNN(nn.Module):
         )
 
         self._to_linear = None
-        self._get_flatten_size()
+        self._get_flatten_size(in_channels, image_size)
         
         self.classifier = nn.Sequential(
             nn.Linear(self._to_linear, 128),
             nn.ReLU(),
             nn.Linear(128, 10)
         )
-    def _get_flatten_size(self):
+    def _get_flatten_size(self, in_channels, image_size):
         with torch.no_grad():
-            x = torch.zeros(1, 1, 28, 28)  # Dummy MNIST-like input
+            x = torch.zeros(1, in_channels, image_size, image_size)  # Dummy MNIST-like input
             x = self.features(x)
             self._to_linear = x.view(1, -1).shape[1]
 

@@ -41,14 +41,13 @@ def standard_evaluate(
         model.zero_grad()
         loss.backward()
 
-        data_grad = data.grad.data
+        
 
         # Generate adversarial example 
         perturbed_data = attack_fn(
             model = model,
-            image = data,
+            images = data,
             labels = target,
-            data_grad = data_grad,
             **attack_params
         )
 

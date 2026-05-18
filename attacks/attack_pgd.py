@@ -1,6 +1,6 @@
 import torch 
 
-def pgd_attack(model, images, labels, epsilon, alpha=0.01, iters=20):
+def pgd_attack(model, images, labels, epsilon, alpha=0.01, iters=20, **kwargs):
     original = images.clone().detach()
 
     # Random Start

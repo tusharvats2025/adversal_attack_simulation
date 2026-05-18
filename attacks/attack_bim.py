@@ -1,6 +1,6 @@
 import torch
 
-def bim_attack(model, images, labels, epsilon, alpha=0.01, iters=20):
+def bim_attack(model, images, labels, epsilon, alpha=0.01, iters=20, **kwargs):
     original = images.clone().detach()
     perturbed = original.clone().detach()
 

@@ -1,5 +1,5 @@
 import torch
-from attacks.init import ATTACKS_REGISTORY
+from attacks.__init__ import ATTACKS_REGISTRY
 
 def standard_evaluate(
         model,
@@ -17,12 +17,12 @@ def standard_evaluate(
     correct = 0
     total = 0
 
-    if attack_name not in ATTACKS_REGISTORY:
+    if attack_name not in ATTACKS_REGISTRY:
         raise ValueError(
             f"Unkown attack '{attack_name}'."
-            f"Available : {list(ATTACKS_REGISTORY.keys())}"
+            f"Available : {list(ATTACKS_REGISTRY.keys())}"
         )
-    attack_fn = ATTACKS_REGISTORY[attack_name]
+    attack_fn = ATTACKS_REGISTRY[attack_name]
 
     for data, target in test_loader:
         data, target = data.to(device), target.to(device)

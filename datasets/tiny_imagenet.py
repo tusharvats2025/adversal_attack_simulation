@@ -29,5 +29,5 @@ def get_tiny_imagenet(batch_size=128, image_size=64):
 
     return (
         DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=4),
-        DataLoader(val_set, batch_size=1, shuffle=False),
+        DataLoader(val_set, batch_size=1, shuffle=False, num_workers=4),
     )

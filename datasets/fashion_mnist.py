@@ -15,6 +15,6 @@ def get_fashion_mnist(batch_size=64, image_size=28):
     )
 
     return(
-        DataLoader(train, batch_size=batch_size, shuffle=True),
-        DataLoader(test, batch_size=1, shuffle=False)
+        DataLoader(train, batch_size=batch_size, shuffle=True, num_workers=2),
+        DataLoader(test, batch_size=1, shuffle=False, num_workers=2)
     )

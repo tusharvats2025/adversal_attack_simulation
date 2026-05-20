@@ -30,5 +30,5 @@ def get_cifar10(batch_size=128, image_size=32):
 
     return (
         DataLoader(train, batch_size=batch_size, shuffle=True, num_workers=2),
-        DataLoader(test, batch_size=1, shuffle=False)
+        DataLoader(test, batch_size=1, shuffle=False, num_workers=2)
     )

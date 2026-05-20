@@ -11,6 +11,7 @@ def standard_evaluate(
     """
     Standard adverserial evaluation for FGSM / BIM/ PGD
     Returns the accuracy under attak.
+    Now supports batch_size > 1
     """
 
     model.eval()
@@ -19,49 +20,56 @@ def standard_evaluate(
 
     if attack_name not in ATTACKS_REGISTRY:
         raise ValueError(
-            f"Unkown attack '{attack_name}'."
-            f"Available : {list(ATTACKS_REGISTRY.keys())}"
+            f"Unknown attack '{attack_name}'. "
+            f"Available: {list(ATTACKS_REGISTRY.keys())}"
         )
     attack_fn = ATTACKS_REGISTRY[attack_name]
 
     for data, target in test_loader:
         data, target = data.to(device), target.to(device)
-        data.requires_grad = True
-
-        # Forward pass
-        output = model(data)
-        init_pred = output.argmax(dim=1)
-
-        # Only attack correctly classified samples
-        if init_pred.item() != target.item():
-            total += 1
+        
+        # Get initial predictions
+        with torch.no_grad():
+            output = model(data)
+            init_pred = output.argmax(dim=1)
+        
+        # Track which samples are correctly classified
+        correct_mask = (init_pred == target)
+        
+        # Skip if no correctly classified samples in this batch
+        if not correct_mask.any():
+            total += data.size(0)
             continue
-
-        loss = torch.nn.CrossEntropyLoss()(output, target)
+        
+        # Only attack correctly classified samples
+        attack_data = data[correct_mask].clone()
+        attack_target = target[correct_mask]
+        
+        attack_data.requires_grad_(True)
+        
+        # Forward pass on attacked samples
+        output = model(attack_data)
+        loss = torch.nn.CrossEntropyLoss()(output, attack_target)
+        
         model.zero_grad()
         loss.backward()
-
         
-
-        # Generate adversarial example 
+        # Generate adversarial examples
         perturbed_data = attack_fn(
-            model = model,
-            images = data,
-            labels = target,
+            model=model,
+            images=attack_data,
+            labels=attack_target,
             **attack_params
         )
-
-        # Re-classify 
+        
+        # Re-classify perturbed samples
         with torch.no_grad():
             adv_output = model(perturbed_data)
             final_pred = adv_output.argmax(dim=1)
-
-        if final_pred.item() == target.item():
-            correct += 1
         
-        total += 1
+        # Count correct predictions after attack
+        correct += (final_pred == attack_target).sum().item()
+        total += attack_target.size(0)
     
-    adv_acc = correct / total
+    adv_acc = correct / total if total > 0 else 0.0
     return adv_acc
-
-

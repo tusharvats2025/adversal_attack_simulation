@@ -6,7 +6,7 @@ class SimpleCNN(nn.Module):
         super(SimpleCNN, self).__init__()
 
         self.features = nn.Sequential(
-            nn.Conv2d(1, 32, kernel_size=3, stride=1, padding=1),  # Output: (32, 28, 28)
+            nn.Conv2d(in_channels, 32, kernel_size=3, stride=1, padding=1),  # Output: (32, 28, 28)
             nn.ReLU(),
             nn.MaxPool2d(2, 2),                                     # Output: (32, 14, 14)
             nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1), # Output: (64, 14, 14)
@@ -20,7 +20,7 @@ class SimpleCNN(nn.Module):
         self.classifier = nn.Sequential(
             nn.Linear(self._to_linear, 128),
             nn.ReLU(),
-            nn.Linear(128, 10)
+            nn.Linear(128, num_classes) # fixed: now uses num_classes
         )
     def _get_flatten_size(self, in_channels, image_size):
         with torch.no_grad():

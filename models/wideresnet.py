@@ -6,8 +6,9 @@ class WideResNet(nn.Module):
         super().__init__()
         self.model = wide_resnet50_2(weights=None)
         self.model.conv1 = nn.Conv2d(
-            in_channels, 64, kernel_size=7, stride=2, padding=3, bias=False
+            in_channels, 64, kernel_size=3, stride=1, padding=1, bias=False
         )
+        self.model.maxpool = nn.Identity() # Remove initial maxpool
         self.model.fc = nn.Linear(self.model.fc.in_features, num_classes)
 
     def forward(self, x):
